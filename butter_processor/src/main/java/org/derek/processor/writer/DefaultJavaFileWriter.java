@@ -1,6 +1,7 @@
 package org.derek.processor.writer;
 
 import org.derek.annotation.ViewInjector;
+import org.derek.processor.util.IOUtil;
 
 import java.io.IOException;
 import java.io.Writer;
@@ -14,8 +15,15 @@ public class DefaultJavaFileWriter extends AbsWriter {
         super(mProcessingEnv);
     }
 
+    /**
+     * 内部类有问题
+     * @param writer
+     * @param info
+     * @throws IOException
+     */
     @Override
     protected void generateImport(Writer writer, InjectorInfo info) throws IOException {
+        IOUtil.print("===================generateImport========================");
         writer.write("package " + info.packageName + " ;");
         writer.write("\n\n");
         writer.write("import org.derek.butter.adapter.InjectAdapter ;");
@@ -37,15 +45,18 @@ public class DefaultJavaFileWriter extends AbsWriter {
 
     @Override
     protected void writeField(Writer writer, VariableElement element, InjectorInfo info) throws IOException {
+        IOUtil.print("===================writeField========================");
         ViewInjector injector = element.getAnnotation(ViewInjector.class);
+        if (injector == null)
+            return;
         String fieldName = element.getSimpleName().toString();
-        writer.write("      target." + fieldName + " =  ViewFinder.findViewById(target, "
-                + injector.value() + "  ) ; ");
+        writer.write("      target." + fieldName + " =  ViewFinder.findViewById(target, " + injector.value() + "  ) ; ");
         writer.write("\n");
     }
 
     @Override
     protected void writeEnd(Writer writer) throws IOException {
+        IOUtil.print("===================writeEnd========================");
         writer.write("  }");
         writer.write("\n\n");
         writer.write(" } ");

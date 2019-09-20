@@ -2,6 +2,7 @@ package org.derek.processor.anno.handler;
 
 import org.derek.annotation.ViewInjector;
 import org.derek.processor.util.AnnotationUtil;
+import org.derek.processor.util.IOUtil;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -27,6 +28,8 @@ public class ViewInjectHandler implements AnnotationHandler {
         Map<String,List<VariableElement>> annotationMap = new HashMap<>();
         // 获取到使用ViewInjector注解的所有元素
         Set<? extends Element> elementSet = roundEnv.getElementsAnnotatedWith(ViewInjector.class);
+
+        IOUtil.print("elementSet " + elementSet.size());
         for (Element element : elementSet){
             // 注解的字段
             VariableElement varElement = (VariableElement) element;
@@ -57,10 +60,12 @@ public class ViewInjectHandler implements AnnotationHandler {
     private String getParentClassName(VariableElement varElement) {
         // 获取该元素所在的类型，例如某个View是某个Activity的字段，这里就是获取这个Activity的类型
         TypeElement typeElement = (TypeElement) varElement.getEnclosingElement();
-        System.out.println(typeElement.getQualifiedName());
+        System.out.println( "getParentClassName " + typeElement.getQualifiedName());
         // 获取typeElement的包名
         String packageName = AnnotationUtil.getPackageName(mProcessingEnv,typeElement);
         // 类型的完整路径名，比如某个Activity的完整路径
-        return packageName + "." + typeElement.getSimpleName().toString();
+//        return packageName + "." + typeElement.getSimpleName().toString();
+        return typeElement.getQualifiedName().toString();
     }
+
 }

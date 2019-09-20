@@ -5,11 +5,11 @@ import com.google.auto.service.AutoService;
 import org.derek.annotation.ViewInjector;
 import org.derek.processor.anno.handler.AnnotationHandler;
 import org.derek.processor.anno.handler.ViewInjectHandler;
+import org.derek.processor.util.IOUtil;
 import org.derek.processor.writer.AdapterWriter;
 import org.derek.processor.writer.DefaultJavaFileWriter;
 
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.LinkedList;
 import java.util.List;
@@ -63,7 +63,7 @@ public class ViewInjectorProcessor extends AbstractProcessor {
     /**
      * 类型与字段的关联表,用于在写入Java文件时按类型来写不同的文件和字段
      */
-    Map<String, List<VariableElement>> map = new HashMap<>();
+    HashMap<String, List<VariableElement>> map = new HashMap<>();
     /**
      *
      */
@@ -84,19 +84,22 @@ public class ViewInjectorProcessor extends AbstractProcessor {
     @Override
     public boolean process(Set<? extends TypeElement> set, RoundEnvironment roundEnvironment) {
 //        Map 在每次 处理前必须清空，一个Processor类要走三次process
-        Set<?> sets = roundEnvironment.getRootElements();
-        Iterator iterator = sets.iterator();
-        System.out.println(">>>>>>>>>>>>>>  start >>>>>>>>>>>>>>>>>>");
-        while (iterator.hasNext()){
-            System.out.println(iterator.next().toString());
-        }
-        System.out.println(">>>>>>>>>>>>>>  end >>>>>>>>>>>>>>>>>>");
+//        Set<?> sets = roundEnvironment.getRootElements();
+//        Iterator iterator = sets.iterator();
+//        System.out.println(">>>>>>>>>>>>>>  start >>>>>>>>>>>>>>>>>>");
+//        while (iterator.hasNext()){
+//            System.out.println(iterator.next().toString());
+//        }
+//        System.out.println(">>>>>>>>>>>>>>  end >>>>>>>>>>>>>>>>>>");
+        // ======================
         map.clear();
 
         for (AnnotationHandler handler : mHandlers){
             handler.attachProcessingEnv(processingEnv);
             map.putAll(handler.handleAnnotation(roundEnvironment));
+            IOUtil.print(map.size() + "   map .size ");
         }
+
         mWriter.generate(map);
         return false;
     }

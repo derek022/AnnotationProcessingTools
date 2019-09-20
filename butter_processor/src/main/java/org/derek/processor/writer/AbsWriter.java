@@ -44,20 +44,17 @@ public abstract class AbsWriter implements AdapterWriter {
             Writer writer  = null;
             JavaFileObject javaFileObject;
 
-            System.out.println( "generate ：  " +info.getClassFullPath());
-            AnnotationUtil.value ++;
-            System.out.println(" value : " + AnnotationUtil.value);
             try {
                 javaFileObject = mFiler.createSourceFile(info.getClassFullPath());
                 writer = javaFileObject.openWriter();
                 generateImport(writer,info);
                 // 写入该类中的所有字段到findViews方法中
                 for (VariableElement variableElement : entry.getValue()) {
+                    IOUtil.print(variableElement.getSimpleName().toString() + ">>>>>>>>>>>>>>>>>>>>");
                     writeField(writer, variableElement, info);
                 }
                 writeEnd(writer);
             } catch (IOException e) {
-                System.out.println("error ========================  ");
                 e.printStackTrace();
             }finally {
                 IOUtil.closeQuitly(writer);
@@ -85,8 +82,7 @@ public abstract class AbsWriter implements AdapterWriter {
      * @param info
      * @throws IOException
      */
-    protected abstract void generateImport(Writer writer, InjectorInfo info)
-            throws IOException;
+    protected abstract void generateImport(Writer writer, InjectorInfo info) throws IOException;
 
     /**
      * @param writer
@@ -94,8 +90,7 @@ public abstract class AbsWriter implements AdapterWriter {
      * @param info
      * @throws IOException
      */
-    protected abstract void writeField(Writer writer, VariableElement element, InjectorInfo info)
-            throws IOException;
+    protected abstract void writeField(Writer writer, VariableElement element, InjectorInfo info) throws IOException;
 
     /**
      * @param writer

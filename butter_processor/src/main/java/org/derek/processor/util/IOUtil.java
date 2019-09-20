@@ -13,4 +13,9 @@ public final class IOUtil {
             }
         }
     }
+
+
+    public static void print(String content){
+        System.out.println(content);
+    }
 }
